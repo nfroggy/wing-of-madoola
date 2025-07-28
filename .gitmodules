@@ -1,0 +1,3 @@
+[submodule "a65n"]
+	path = a65n
+	url = https://github.com/nfroggy/a65n.git
