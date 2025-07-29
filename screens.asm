@@ -1,637 +1,402 @@
-chunkBase:
-	db	$1E,$1E,$1D,$1E
-	db	$1D,$1E,$1E,$1E
-	db	$18,$1E,$16,$18
-	db	$1C,$00,$1A,$1C
-	db	$1E,$1D,$1E,$1E
-	db	$1D,$1E,$1E,$1D
-	db	$16,$17,$17,$18
-	db	$1A,$1B,$1B,$1C
-	db	$1D,$1E,$1E,$1E
-	db	$1E,$1D,$1E,$1D
-	db	$16,$17,$17,$18
-	db	$1A,$19,$1B,$1C
-	db	$1E,$1E,$1D,$1E
-	db	$1E,$1D,$1E,$1E
-	db	$16,$18,$1D,$1E
-	db	$1A,$1C,$21,$22
-	db	$1E,$1D,$1D,$1E
-	db	$1E,$25,$26,$27
-	db	$1D,$26,$29,$29
-	db	$25,$26,$04,$29
-	db	$1E,$1E,$1E,$1D
-	db	$1E,$1D,$1E,$1E
-	db	$1E,$1E,$1D,$1E
-	db	$1D,$1E,$1E,$1E
-	db	$06,$06,$06,$05
-	db	$05,$05,$05,$05
-	db	$05,$05,$05,$05
-	db	$05,$05,$05,$05
-	db	$0A,$0B,$08,$05
-	db	$07,$0C,$08,$06
-	db	$05,$05,$05,$05
-	db	$05,$05,$05,$05
-	db	$1E,$1D,$1D,$1E
-	db	$1D,$13,$0D,$1E
-	db	$13,$05,$05,$0D
-	db	$01,$05,$05,$02
-	db	$1E,$1E,$1D,$25
-	db	$1D,$27,$25,$03
-	db	$2C,$29,$2B,$28
-	db	$2D,$28,$03,$29
-	db	$26,$27,$1D,$1E
-	db	$03,$26,$27,$1E
-	db	$28,$2B,$29,$2C
-	db	$29,$29,$2B,$2D
-	db	$0D,$20,$23,$24
-	db	$06,$0E,$11,$12
-	db	$06,$06,$09,$06
-	db	$05,$05,$05,$05
-	db	$1F,$20,$23,$24
-	db	$11,$12,$11,$12
-	db	$09,$06,$14,$06
-	db	$05,$05,$15,$05
-	db	$1F,$13,$03,$05
-	db	$0F,$10,$0A,$05
-	db	$06,$06,$06,$06
-	db	$05,$05,$05,$05
-	db	$05,$05,$15,$05
-	db	$05,$08,$15,$05
-	db	$05,$06,$15,$05
-	db	$06,$05,$15,$06
-	db	$1F,$20,$23,$24
-	db	$11,$12,$11,$12
-	db	$09,$06,$09,$06
-	db	$05,$05,$05,$05
-	db	$23,$24,$23,$24
-	db	$11,$11,$11,$11
-	db	$3A,$3B,$3C,$3C
-	db	$05,$35,$35,$36
-	db	$23,$24,$1F,$20
-	db	$11,$11,$11,$12
-	db	$3B,$3C,$3D,$05
-	db	$35,$35,$3F,$05
-	db	$1F,$20,$23,$24
-	db	$11,$11,$11,$11
-	db	$0D,$38,$39,$39
-	db	$3E,$36,$35,$35
-	db	$23,$24,$23,$24
-	db	$11,$11,$11,$12
-	db	$38,$38,$13,$05
-	db	$36,$36,$3F,$05
-	db	$3E,$37,$37,$37
-	db	$05,$37,$37,$37
-	db	$05,$40,$40,$40
-	db	$06,$06,$06,$06
-	db	$37,$37,$3F,$05
-	db	$37,$37,$3F,$05
-	db	$40,$40,$01,$05
-	db	$06,$06,$06,$06
-	db	$05,$05,$06,$06
-	db	$02,$2E,$30,$30
-	db	$05,$2F,$2E,$2E
-	db	$06,$06,$06,$06
-	db	$05,$05,$15,$05
-	db	$30,$30,$31,$05
-	db	$2E,$2E,$31,$05
-	db	$06,$33,$34,$05
-	db	$05,$05,$05,$05
-	db	$30,$03,$30,$30
-	db	$2E,$32,$2E,$2E
-	db	$06,$06,$06,$06
-	db	$4B,$46,$47,$4B
-	db	$48,$63,$62,$48
-	db	$64,$62,$64,$65
-	db	$41,$41,$41,$41
-	db	$47,$4B,$4B,$4B
-	db	$63,$44,$45,$48
-	db	$65,$65,$64,$65
-	db	$41,$41,$41,$41
-	db	$4B,$41,$4B,$4B
-	db	$44,$4B,$4B,$45
-	db	$61,$44,$45,$62
-	db	$4A,$62,$63,$49
-	db	$4B,$45,$62,$44
-	db	$48,$62,$62,$63
-	db	$64,$65,$64,$65
-	db	$41,$4B,$41,$41
-	db	$4B,$4E,$62,$42
-	db	$48,$63,$49,$4B
-	db	$64,$49,$4B,$4B
-	db	$41,$4B,$4B,$4B
-	db	$46,$4B,$41,$4E
-	db	$63,$44,$45,$62
-	db	$65,$65,$64,$65
-	db	$41,$41,$41,$41
-	db	$4B,$4B,$4B,$4B
-	db	$44,$4B,$4B,$45
-	db	$62,$44,$45,$62
-	db	$63,$62,$63,$61
-	db	$47,$4E,$62,$44
-	db	$62,$63,$63,$61
-	db	$63,$61,$62,$63
-	db	$63,$63,$61,$63
-	db	$4B,$46,$4B,$4B
-	db	$48,$63,$44,$4B
-	db	$63,$63,$62,$42
-	db	$4A,$62,$49,$4B
-	db	$4B,$4B,$41,$46
-	db	$4B,$45,$48,$62
-	db	$43,$65,$64,$65
-	db	$4B,$41,$41,$41
-	db	$43,$62,$4D,$41
-	db	$43,$63,$62,$48
-	db	$4B,$4A,$64,$63
-	db	$4B,$4B,$41,$41
-	db	$45,$61,$63,$42
-	db	$63,$62,$4D,$45
-	db	$61,$63,$61,$62
-	db	$4A,$62,$63,$49
-	db	$4B,$4B,$4B,$4B
-	db	$44,$4B,$4B,$45
-	db	$62,$42,$43,$62
-	db	$63,$42,$43,$63
-	db	$61,$44,$4B,$4A
-	db	$62,$62,$42,$4B
-	db	$63,$49,$4B,$4B
-	db	$41,$4B,$4B,$45
-	db	$49,$4B,$43,$62
-	db	$4B,$4B,$45,$61
-	db	$4B,$43,$62,$63
-	db	$44,$4B,$4A,$63
-	db	$4B,$4B,$4B,$4B
-	db	$4B,$4B,$45,$48
-	db	$43,$89,$64,$65
-	db	$4B,$4B,$41,$41
-	db	$46,$4B,$4B,$4B
-	db	$62,$7E,$7F,$4B
-	db	$65,$80,$7D,$4B
-	db	$41,$41,$4B,$4B
-	db	$4B,$41,$87,$4B
-	db	$48,$44,$83,$45
-	db	$64,$64,$84,$65
-	db	$41,$41,$41,$41
-	db	$47,$86,$41,$41
-	db	$62,$63,$44,$45
-	db	$65,$64,$61,$64
-	db	$41,$41,$41,$41
-	db	$46,$83,$86,$41
-	db	$62,$84,$81,$4B
-	db	$49,$41,$41,$4B
-	db	$4B,$4B,$4B,$4B
-	db	$4B,$47,$41,$4B
-	db	$48,$62,$44,$45
-	db	$49,$4A,$64,$64
-	db	$4B,$4B,$86,$41
-	db	$4B,$41,$4B,$41
-	db	$4B,$87,$4B,$45
-	db	$4B,$82,$48,$65
-	db	$4B,$41,$41,$41
-	db	$49,$41,$43,$62
-	db	$4B,$4B,$43,$61
-	db	$4B,$87,$45,$63
-	db	$44,$82,$63,$63
-	db	$4B,$88,$4B,$46
-	db	$44,$83,$45,$62
-	db	$64,$84,$64,$65
-	db	$41,$41,$41,$4B
-	db	$4B,$41,$4B,$4B
-	db	$4B,$88,$45,$48
-	db	$4B,$82,$65,$64
-	db	$4B,$41,$4B,$41
-	db	$4B,$41,$46,$4B
-	db	$4B,$45,$63,$48
-	db	$43,$65,$64,$62
-	db	$4B,$88,$41,$41
-	db	$61,$63,$63,$61
-	db	$62,$88,$61,$62
-	db	$63,$60,$5E,$63
-	db	$5D,$5E,$5D,$5F
-	db	$46,$83,$41,$47
-	db	$63,$84,$48,$62
-	db	$49,$41,$4A,$64
-	db	$4B,$4B,$4B,$41
-	db	$4B,$83,$47,$4B
-	db	$48,$84,$62,$42
-	db	$49,$41,$41,$4B
-	db	$4B,$4B,$4B,$4B
-	db	$4B,$83,$46,$4B
-	db	$43,$84,$63,$48
-	db	$4B,$41,$4E,$62
-	db	$4B,$45,$62,$49
-	db	$4B,$4B,$4B,$4B
-	db	$48,$44,$46,$45
-	db	$61,$63,$62,$62
-	db	$4F,$50,$51,$52
-	db	$4B,$8A,$8B,$4B
-	db	$4B,$8A,$8B,$4B
-	db	$4B,$8A,$8B,$4B
-	db	$4B,$8A,$8B,$4B
-	db	$4B,$8A,$5C,$44
-	db	$4B,$8A,$5D,$62
-	db	$4B,$8A,$5C,$61
-	db	$4B,$8A,$5D,$49
-	db	$61,$63,$61,$62
-	db	$62,$61,$63,$63
-	db	$61,$63,$62,$61
-	db	$63,$62,$61,$63
-	db	$61,$63,$63,$5D
-	db	$63,$62,$5C,$63
-	db	$62,$5C,$5F,$62
-	db	$5D,$5E,$60,$63
-	db	$5D,$5E,$5C,$5F
-	db	$60,$5D,$61,$62
-	db	$63,$62,$63,$63
-	db	$61,$62,$5F,$62
-	db	$5F,$62,$62,$61
-	db	$62,$5F,$63,$63
-	db	$62,$5C,$5E,$62
-	db	$63,$5D,$5C,$5F
-	db	$62,$62,$63,$5D
-	db	$62,$61,$5D,$62
-	db	$64,$5D,$64,$65
-	db	$41,$41,$41,$41
-	db	$61,$62,$61,$61
-	db	$63,$61,$63,$62
-	db	$64,$65,$62,$64
-	db	$41,$41,$4B,$41
-	db	$4B,$41,$4B,$4B
-	db	$48,$44,$47,$45
-	db	$62,$53,$54,$53
-	db	$56,$57,$59,$57
-	db	$47,$45,$4C,$44
-	db	$63,$63,$62,$63
-	db	$53,$54,$55,$53
-	db	$58,$59,$5A,$57
-	db	$4B,$41,$46,$4B
-	db	$44,$45,$62,$48
-	db	$53,$54,$53,$63
-	db	$58,$59,$57,$5B
-	db	$4B,$4B,$4B,$4B
-	db	$4B,$45,$78,$48
-	db	$43,$72,$79,$74
-	db	$43,$73,$76,$74
-	db	$45,$78,$7B,$44
-	db	$72,$79,$74,$7B
-	db	$76,$7A,$77,$75
-	db	$77,$7C,$77,$76
-	db	$45,$67,$88,$4B
-	db	$66,$69,$85,$68
-	db	$69,$69,$69,$85
-	db	$4A,$61,$67,$68
-	db	$4B,$45,$48,$68
-	db	$68,$68,$67,$88
-	db	$69,$69,$69,$85
-	db	$68,$67,$61,$68
-	db	$44,$4B,$4B,$45
-	db	$66,$48,$68,$67
-	db	$68,$85,$69,$69
-	db	$85,$68,$67,$41
-	db	$68,$68,$44,$4B
-	db	$66,$85,$68,$68
-	db	$85,$68,$69,$68
-	db	$41,$4B,$41,$41
-	db	$4B,$88,$41,$4B
-	db	$48,$81,$4B,$45
-	db	$72,$74,$74,$75
-	db	$76,$77,$6E,$73
-	db	$4B,$4B,$4B,$4B
-	db	$44,$45,$44,$4B
-	db	$63,$72,$62,$42
-	db	$6E,$73,$63,$42
-	db	$45,$70,$71,$70
-	db	$63,$6A,$6D,$6B
-	db	$49,$41,$4B,$4B
-	db	$4B,$4B,$4B,$4B
-	db	$6F,$70,$70,$71
-	db	$6A,$6B,$6A,$6C
-	db	$41,$4B,$41,$41
-	db	$4B,$4B,$4B,$4B
-	db	$71,$70,$62,$42
-	db	$6B,$6B,$49,$4B
-	db	$4B,$4B,$4B,$4B
-	db	$4B,$4B,$4B,$4B
-	db	$8C,$8C,$90,$8F
-	db	$8C,$88,$92,$99
-	db	$8C,$94,$97,$96
-	db	$8C,$8D,$8D,$8D
-	db	$8C,$8C,$8C,$88
-	db	$8C,$8F,$98,$8E
-	db	$8C,$8E,$98,$98
-	db	$8C,$8D,$8D,$8D
-	db	$8F,$8F,$8C,$8C
-	db	$99,$99,$88,$8C
-	db	$8E,$96,$8E,$8C
-	db	$8D,$8D,$8D,$8C
-	db	$8C,$8C,$8C,$8C
-	db	$93,$93,$88,$8C
-	db	$8E,$8E,$94,$8C
-	db	$8D,$8D,$8D,$8C
-	db	$8F,$90,$8C,$8C
-	db	$99,$92,$8C,$8C
-	db	$96,$97,$9A,$8C
-	db	$8D,$8D,$8D,$8C
-	db	$90,$8C,$8C,$8C
-	db	$92,$99,$8C,$8C
-	db	$97,$96,$96,$8C
-	db	$8D,$8D,$8D,$8C
-	db	$8F,$8F,$8F,$8F
-	db	$99,$91,$99,$91
-	db	$96,$95,$96,$95
-	db	$8D,$8D,$8D,$8D
-	db	$90,$8F,$8F,$90
-	db	$92,$91,$91,$92
-	db	$97,$96,$96,$97
-	db	$8D,$8D,$8D,$8D
-	db	$61,$48,$62,$48
-	db	$61,$63,$61,$61
-	db	$62,$61,$63,$62
-	db	$9B,$9B,$9B,$9B
-	db	$4B,$88,$46,$45
-	db	$4B,$82,$9D,$9E
-	db	$4B,$4B,$9C,$9C
-	db	$4B,$4B,$41,$9B
-	db	$44,$46,$4B,$45
-	db	$62,$62,$48,$63
-	db	$A0,$A1,$A1,$A0
-	db	$41,$4B,$4B,$41
-	db	$63,$61,$62,$48
-	db	$9E,$9E,$9E,$9E
-	db	$9C,$9C,$9C,$9C
-	db	$9B,$9B,$9B,$9B
-	db	$4B,$4B,$4B,$45
-	db	$4B,$88,$45,$62
-	db	$4B,$82,$62,$61
-	db	$4B,$41,$4B,$41
-	db	$48,$41,$4B,$4B
-	db	$62,$44,$88,$4B
-	db	$63,$63,$81,$4B
-	db	$41,$41,$41,$4B
-	db	$48,$44,$4B,$4B
-	db	$61,$63,$42,$4B
-	db	$62,$49,$4B,$4B
-	db	$41,$4B,$4B,$4B
-	db	$44,$4B,$47,$4B
-	db	$9F,$48,$9A,$4B
-	db	$9C,$9B,$9B,$4B
-	db	$9B,$4B,$4B,$4B
-	db	$A6,$A4,$A4,$A7
-	db	$A6,$B7,$C5,$A7
-	db	$A6,$CC,$D6,$A2
-	db	$A2,$A3,$A2,$A2
-	db	$A6,$A4,$A4,$A7
-	db	$A6,$C5,$B7,$A7
-	db	$A6,$CD,$B4,$A7
-	db	$A6,$CE,$A4,$A7
-	db	$A2,$C5,$A8,$A2
-	db	$A2,$CD,$AE,$A2
-	db	$A2,$CC,$D0,$A2
-	db	$A2,$A2,$A2,$A2
-	db	$A2,$A8,$A8,$A2
-	db	$A2,$B7,$C5,$A2
-	db	$A2,$CD,$D0,$A2
-	db	$A2,$CE,$A3,$A2
-	db	$B4,$B7,$B4,$B4
-	db	$B6,$B4,$B7,$B4
-	db	$B4,$B4,$B4,$B4
-	db	$B7,$B4,$B4,$B6
-	db	$DB,$A3,$DB,$A3
-	db	$DB,$A2,$DB,$A2
-	db	$B7,$B4,$B4,$B6
-	db	$B4,$B7,$B4,$B4
-	db	$A3,$A3,$DB,$A3
-	db	$B5,$B6,$B6,$B5
-	db	$D3,$B7,$B7,$D3
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$DB,$B0,$DB,$DB
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$AB,$AA,$AB,$AA
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$AA,$AA,$AA,$AA
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$B5,$B4,$B5,$B4
-	db	$B1,$AC,$B1,$AD
-	db	$A4,$A4,$A4,$A4
-	db	$A5,$A5,$A5,$A5
-	db	$B5,$B4,$B5,$B4
-	db	$B1,$AE,$B1,$AB
-	db	$A4,$A4,$A4,$A4
-	db	$A4,$C4,$C4,$C4
-	db	$A4,$C4,$C4,$C4
-	db	$AA,$C3,$C2,$C3
-	db	$D5,$A9,$AB,$A9
-	db	$C4,$C4,$C4,$C4
-	db	$C4,$C4,$C4,$C4
-	db	$C2,$C3,$C2,$C2
-	db	$AB,$A9,$AB,$A9
-	db	$C4,$C4,$DC,$A4
-	db	$C4,$C4,$DC,$DC
-	db	$C2,$C2,$A4,$A4
-	db	$AB,$A9,$CA,$A4
-	db	$A4,$A4,$A4,$A4
-	db	$AA,$AB,$AB,$A9
-	db	$D6,$A3,$A3,$B4
-	db	$A2,$B4,$B7,$D6
-	db	$A3,$B7,$D6,$A3
-	db	$B7,$D6,$A2,$A2
-	db	$D7,$AA,$AC,$AA
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A2,$A5,$A5,$A5
-	db	$A6,$A4,$B4,$AA
-	db	$A6,$B7,$D6,$A3
-	db	$A2,$A5,$B7,$D6
-	db	$A5,$B7,$D6,$A2
-	db	$B7,$D6,$A2,$B4
-	db	$D6,$A2,$B4,$B7
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$DB,$DB,$B0,$DB
-	db	$D4,$D4,$D4,$D4
-	db	$A2,$A2,$A2,$A2
-	db	$A2,$A2,$A2,$A2
-	db	$B0,$DB,$A7,$A2
-	db	$AF,$D4,$A7,$A2
-	db	$A3,$D5,$B7,$A3
-	db	$A2,$A2,$D5,$B7
-	db	$AA,$AD,$AA,$D8
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$B5,$B7,$B7,$B5
-	db	$B1,$AC,$AD,$B1
-	db	$A4,$A4,$A4,$A4
-	db	$A5,$A5,$A5,$A5
-	db	$B4,$B5,$B3,$B3
-	db	$AD,$B1,$CB,$B3
-	db	$A4,$A4,$A4,$A4
-	db	$A2,$A2,$A2,$A2
-	db	$A2,$A2,$A2,$A2
-	db	$A2,$A2,$A2,$A2
-	db	$A2,$A2,$A2,$A2
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$AA,$AB,$AA,$AE
-	db	$A3,$CF,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$B7,$B7,$A7,$A2
-	db	$AB,$A9,$AE,$A7
-	db	$A3,$CF,$A3,$A2
-	db	$A6,$D0,$A4,$A4
-	db	$A6,$D1,$B7,$D2
-	db	$A6,$A3,$D5,$D3
-	db	$A2,$A2,$A2,$A3
-	db	$A2,$D0,$A5,$A5
-	db	$B7,$D1,$B6,$B6
-	db	$D6,$A3,$A3,$D5
-	db	$A2,$A2,$A2,$A2
-	db	$A5,$D0,$B7,$A7
-	db	$D2,$D4,$D6,$A2
-	db	$D3,$D6,$A2,$A2
-	db	$A3,$A2,$A2,$A2
-	db	$A3,$A3,$A3,$A3
-	db	$B4,$A2,$C5,$A2
-	db	$B7,$B4,$D0,$D4
-	db	$D5,$A9,$D8,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A2,$C5,$C5,$A2
-	db	$D4,$D0,$D0,$D4
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$C5,$A3
-	db	$B5,$B7,$D1,$B7
-	db	$B1,$D6,$A3,$D7
-	db	$A3,$A2,$A2,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$AB,$AA,$AE,$AB
-	db	$A3,$C5,$A3,$A3
-	db	$A8,$A8,$A3,$C5
-	db	$B7,$B7,$D2,$D0
-	db	$B0,$B0,$D3,$D1
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A2,$A6,$B7,$B7
-	db	$A6,$C7,$D9,$D9
-	db	$A2,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$C7,$B4,$B7
-	db	$B4,$D4,$DA,$D9
-	db	$A3,$A3,$A3,$A3
-	db	$A4,$A4,$A4,$A4
-	db	$D9,$C6,$C7,$D9
-	db	$D0,$D4,$D4,$D0
-	db	$A3,$A3,$A3,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$C7,$B7,$A5,$A5
-	db	$D4,$DA,$D9,$C8
-	db	$A3,$A3,$A3,$C9
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$B1,$AB,$C8,$B1
-	db	$A3,$A3,$C9,$A3
-	db	$A3,$A3,$A3,$A3
-	db	$A5,$A5,$A5,$A5
-	db	$AA,$AD,$AA,$C8
-	db	$A3,$A3,$A3,$C9
-	db	$A2,$A3,$A3,$A3
-	db	$A6,$C7,$D9,$A2
-	db	$A6,$A8,$B4,$B7
-	db	$A6,$AB,$AB,$D8
-	db	$A6,$B9,$BC,$A7
-	db	$A6,$B8,$BD,$A7
-	db	$A6,$BA,$BC,$A7
-	db	$A6,$B8,$BD,$A7
-	db	$A6,$BB,$BC,$A7
-	db	$A6,$B8,$BE,$A7
-	db	$A6,$B8,$BF,$A7
-	db	$A6,$BA,$BC,$A7
-	db	$A6,$B8,$BE,$A7
-	db	$A6,$B8,$BE,$A7
-	db	$A6,$BA,$BC,$AB
-	db	$A6,$B8,$BF,$A7
-	db	$A6,$B8,$BD,$A7
-	db	$A6,$BB,$BC,$A7
-	db	$AB,$B8,$BE,$A7
-	db	$A6,$BA,$BC,$A7
-	db	$A6,$B8,$BE,$A7
-	db	$A6,$B8,$BF,$A7
-	db	$AB,$BA,$BC,$AA
-	db	$A6,$B8,$BF,$A7
-	db	$A6,$A4,$A8,$A8
-	db	$A6,$A4,$B7,$B4
-	db	$A6,$A4,$B4,$D8
-	db	$A6,$A4,$D8,$B7
-	db	$B7,$D8,$A4,$A7
-	db	$D8,$B4,$A4,$A7
-	db	$B4,$B7,$A4,$A7
-	db	$B7,$B4,$A4,$A7
-	db	$A6,$A4,$A8,$A8
-	db	$A6,$A4,$B7,$B4
-	db	$A6,$A4,$B4,$D8
-	db	$A6,$C7,$D8,$B4
-	db	$B7,$D8,$A4,$A7
-	db	$D8,$B4,$A4,$A7
-	db	$B4,$B7,$A4,$A7
-	db	$B7,$B4,$C6,$A7
-	db	$A6,$A8,$A8,$A7
-	db	$A6,$DB,$DB,$A7
-	db	$A6,$C7,$D9,$A7
-	db	$A6,$D7,$A9,$A7
-	db	$A4,$A4,$A4,$A4
-	db	$B6,$B6,$B6,$A4
-	db	$B4,$B7,$B4,$B5
-	db	$A8,$A8,$B7,$D3
-	db	$A4,$A4,$A4,$A4
-	db	$A4,$B6,$B6,$B6
-	db	$B5,$B4,$B7,$B4
-	db	$D3,$B7,$A8,$A8
-	db	$A4,$B4,$B4,$A4
-	db	$B4,$B6,$B6,$B4
-	db	$B7,$B6,$B6,$B4
-	db	$B7,$B4,$B4,$B7
-	db	$B4,$A3,$A3,$B4
-	db	$B7,$B6,$B6,$B7
-	db	$B4,$B7,$B7,$B4
-	db	$B6,$B4,$B4,$B6
-	db	$D7,$B0,$B0,$D8
-	db	$DB,$A4,$A4,$DB
-	db	$DB,$DD,$DE,$DB
-	db	$D9,$D9,$D9,$D9
-	db	$A4,$A4,$A4,$A4
-	db	$AA,$AA,$AA,$AB
-	db	$A8,$A8,$A4,$AE
-	db	$B7,$B4,$A4,$A4
-	db	$A4,$A4,$A4,$A4
-	db	$AA,$AC,$AA,$AD
-	db	$A8,$A8,$A8,$A8
-	db	$B4,$B6,$B7,$B6
-	db	$A3,$A3,$A3,$A3
-	db	$B4,$B5,$B7,$B4
-	db	$A9,$B1,$A9,$AB
-	db	$DB,$A4,$A4,$DB
-	db	$A3,$A3,$A3,$A3
-	db	$B5,$B6,$B5,$B7
-	db	$B1,$AF,$B1,$B2
-	db	$A4,$DB,$A4,$A4
-	db	$A3,$C0,$A3,$A3
-	db	$B4,$C0,$A2,$A2
-	db	$B4,$C0,$A2,$A2
-	db	$B4,$C0,$A2,$A2
-	db	$A3,$C0,$A2,$A2
-	db	$A2,$C0,$A2,$A2
-	db	$A2,$C0,$A2,$A2
-	db	$A8,$C1,$A8,$A8
-	db	$A5,$A5,$A5,$A5
-	db	$B2,$AB,$AA,$AA
-	db	$B4,$D6,$A3,$A3
-	db	$D5,$A2,$A2,$A2
-	db	$DB,$DB,$DB,$DB
-	db	$DB,$DD,$DD,$DB
-	db	$DD,$DD,$DD,$DD
-	db	$DB,$DB,$DB,$DB
+; =============== S U B R O U T I N E =======================================
+
+; In:
+
+; X: PPU Address high
+; Y: PPU address low
+;
+; $85/$86: Address of text to print
+
+PrintText:
+	jsr	SetPPUAddr	; In:
+; X: PPU Address high
+; Y: PPU Address low
+	ldy	#0
+
+printCopyLoop:
+	lda	(tmpPtrLo),y	; read from text pointer
+	beq	loc_B07F	; if it's 0, exit the loop
+	sta	$2007	; else write to vram
+	iny
+	jmp	printCopyLoop	; read from text pointer
+; ---------------------------------------------------------------------------
+
+loc_B07F:
+	iny
+	tya
+	clc
+	adc	tmpPtrLo	; add the length of the string to the start pos
+	sta	tmpPtrLo	; and overwrite the pointer with the result
+	bcc	locret_B08A
+	inc	tmpPtrHi
+
+locret_B08A:
+	rts
+; End of function PrintText
+
+
+; =============== S U B R O U T I N E =======================================
+
+
+DispStatus:
+	jsr	DisableNMI
+	jsr	DisableBGAndSprites
+	jsr	ClearNametable
+	jsr	ResetScrollPos
+	jsr	ClearOamBuffer
+	ldx	#$F
+
+loc_B09C:
+	lda	gameSpritePalettes,x
+	sta	paletteBuffer+$10,x
+	lda	statusBGPalette,x
+	sta	paletteBuffer,x
+	dex
+	bpl	loc_B09C
+	lda	#0
+	sta	$2000
+	lda	statusTextPtr
+	sta	tmpPtrLo
+	lda	statusTextPtr+1
+	sta	tmpPtrHi
+	ldx	#$20
+	ldy	#$6D
+	jsr	PrintText	; print status text
+	ldx	#$20
+	ldy	#$CB
+	jsr	PrintText	; print hits text
+	ldx	#$21
+	ldy	#9
+	jsr	PrintText	; print magics text
+	ldx	#$21
+	ldy	#$6A
+	jsr	PrintText	; print sword text
+	ldx	#$21
+	ldy	#$A4
+	jsr	PrintText	; print flame sword text
+	ldx	#$21
+	ldy	#$E5
+	jsr	PrintText	; print magic bomb text
+	ldx	#$22
+	ldy	#$25
+	jsr	PrintText	; bound ball
+	ldx	#$22
+	ldy	#$64
+	jsr	PrintText	; shield ball
+	ldx	#$22
+	ldy	#$A8
+	jsr	PrintText	; smasher
+	ldx	#$22
+	ldy	#$EA
+	jsr	PrintText	; flash
+	ldx	#$23
+	ldy	#$2A
+	jsr	PrintText	; boots
+	lda	#0
+	sta	oamWriteCursor
+	lda	#7
+	sta	tmpCount
+	lda	#$C5
+	sta	spriteY
+
+loc_B111:
+	ldx	tmpCount
+	lda	weaponLevels,x
+	beq	loc_B14D
+	sta	tmpCount2
+	lda	#$90
+	sta	spriteX
+	lda	statusItemPalettes,x
+	sta	spriteAttrs
+	lda	statusItemTiles,x
+	sta	spriteTileNum
+
+loc_B127:
+	ldx	oamWriteCursor
+	lda	spriteY
+	sta	oamBuffer,x
+	lda	spriteTileNum
+	sta	oamBuffer+1,x
+	lda	spriteAttrs
+	sta	oamBuffer+2,x
+	lda	spriteX
+	sta	oamBuffer+3,x
+	clc
+	adc	#$10
+	sta	spriteX
+	lda	oamWriteCursor
+	clc
+	adc	#4
+	sta	oamWriteCursor
+	dec	tmpCount2
+	bne	loc_B127
+
+loc_B14D:
+	lda	spriteY
+	sec
+	sbc	#$10
+	sta	spriteY
+	dec	tmpCount
+	bpl	loc_B111
+	ldx	#healthLo
+	jsr	WordToString
+	ldx	#$20
+	ldy	#$D1
+	jsr	PrintText
+	ldx	#maxHealthLo
+	jsr	WordToString
+	ldx	#$20
+	ldy	#$D6
+	jsr	PrintText
+	ldx	#magicLo
+	jsr	WordToString
+	ldx	#$21
+	ldy	#$11
+	jsr	PrintText
+	ldx	#maxMagicLo
+	jsr	WordToString
+	ldx	#$21
+	ldy	#$16
+	jsr	PrintText
+	lda	#$B0
+	sta	ppuctrlCopy
+	lda	#$72
+	jsr	WriteMapper
+	jsr	EnableNMI
+	lda	#180
+	jmp	WaitNFrames	; IN: A - Number of frames to wait
+; End of function DispStatus
+
+; ---------------------------------------------------------------------------
+statusText:
+	db	'STATUS',0; DATA XREF: ROM:statusTextPtr↓o
+	db	'HITS  0000/0000',0
+	db	'MAGICS  0000/0000',0
+	db	'SWORD',0
+	db	'FLAME SWORD',0
+	db	'MAGIC BOMB',0
+	db	'BOUND BALL',0
+	db	'SHIELD BALL',0
+	db	'SMASHER',0
+	db	'FLASH',0
+	db	'BOOTS',0
+statusTextPtr:
+	dw	statusText
+statusItemPalettes:
+	db	$01
+	db	$03
+	db	$03
+	db	$01
+	db	$03
+	db	$03
+	db	$01
+	db	$00
+statusItemTiles:
+	db	$60
+	db	$60
+	db	$66
+	db	$62
+	db	$64
+	db	$68
+	db	$6A
+	db	$BC
+statusBGPalette:
+	db	$0B,$2B,$2B,$2B
+	db	$0B,$2B,$2B,$2B
+	db	$0B,$2B,$2B,$2B
+	db	$0B,$2B,$2B,$2B
+
+; =============== S U B R O U T I N E =======================================
+
+
+InitPPU:
+	jsr	ClearOamBuffer
+	jsr	DisableBGAndSprites
+	jsr	DisableNMI
+	lda	#0
+	sta	flashTimer
+	sta	vramWriteCount
+	lda	#$B0
+	sta	ppuctrlCopy
+	lda	#$73	; 's'
+	jsr	WriteMapper
+	jsr	ClearNametable
+	jmp	ResetScrollPos
+; End of function InitPPU
+
+
+; =============== S U B R O U T I N E =======================================
+
+
+DispStageNumber:
+	jsr	InitPPU
+	lda	#$F
+	sta	paletteBuffer
+	lda	#$2C
+	sta	paletteBuffer+1
+	lda	$2002	; clear PPUADDR latch
+	lda	#$21	; write the address
+	sta	$2006
+	lda	#$EC
+	sta	$2006
+	ldx	#0
+
+loc_B264:
+	lda	stageText,x
+	sta	$2007	; write the "STAGE" text
+	inx
+	cpx	#6
+	bne	loc_B264
+	lda	stageNum
+	asl	a
+	tax
+	lda	stageNumText,x	; write the stage number
+	sta	$2007
+	lda	stageNumText+1,x
+	sta	$2007
+	jsr	EnableNMI
+	lda	#180	; wait 3 seconds
+	jmp	WaitNFrames	; IN: A - Number of frames to wait
+; End of function DispStageNumber
+
+; ---------------------------------------------------------------------------
+stageText:
+	db	'STAGE ',0
+stageNumText:
+	db	' 1'; DATA XREF: ROM:B2AE↓o
+	db	' 2'
+	db	' 3'
+	db	' 4'
+	db	' 5'
+	db	' 6'
+	db	' 7'
+	db	' 8'
+	db	' 9'
+	db	'10'
+	db	'11'
+	db	'12'
+	db	'13'
+	db	'14'
+	db	'15'
+	db	'16'
+	dw	stageNumText
+
+; =============== S U B R O U T I N E =======================================
+
+
+ShowGameOver:
+	jsr	InitPPU
+	lda	#$F
+	sta	paletteBuffer
+	lda	#$2C
+	sta	paletteBuffer+1
+	lda	$2002
+	lda	#$21
+	sta	$2006
+	lda	#$EC
+	sta	$2006
+	ldx	#0
+
+loc_B2CA:
+	lda	gameOverText,x
+	sta	$2007
+	inx
+	cpx	#9
+	bne	loc_B2CA
+	lda	#$70
+	jsr	WriteMapper
+	jsr	EnableNMI
+	lda	#240	; wait 4 seconds
+	jmp	WaitNFrames
+; End of function ShowGameOver
+
+; ---------------------------------------------------------------------------
+gameOverText:
+	db	'GAME OVER'
+
+; =============== S U B R O U T I N E =======================================
+
+
+ShowContinue:
+	jsr	InitSoundEngine
+	jsr	InitPPU
+	lda	#$F		; BUG: The NMI routine only updates color RAM from the palette buffer when
+	sta	paletteBuffer   ; there's no queued VRAM write. Because the loop calls VramWriteLinear
+	lda	#$23		; each frame, that means the palette never gets written and this code
+	sta	paletteBuffer+1	; is left using the title screen palette instead of the intended purple color.
+	lda	continueTextPtr
+	sta	tmpPtrLo
+	lda	continueTextPtr+1
+	sta	tmpPtrHi
+	ldx	#$21
+	ldy	#$AC
+	jsr	PrintText
+	ldx	#$21
+	ldy	#$EE
+	jsr	PrintText
+	ldx	#$22
+	ldy	#$2E
+	jsr	PrintText
+	jsr	EnableNMI
+	lda	#0
+	sta	continueCursor
+
+continueScreenLoop:
+	lda	#$2F
+	sta	$2
+	lda	#$22
+	sta	$3
+	jsr	VramWriteLinear
+	lda	continueCursor
+	asl	a
+	tay
+	lda	stageNumText,y
+	sta	vramWriteBuff,x
+	inx
+	lda	stageNumText+1,y
+	sta	vramWriteBuff,x
+	inx
+	stx	vramWriteCount
+	jsr	VramSetWriteCount
+	jsr	WaitVblank
+	jsr	ReadControllers
+	lda	joy1Edge
+	lsr	a
+	lsr	a
+	lsr	a
+	bcs	continueScreenDownPressed
+	lsr	a
+	bcs	continueScreenUpPressed
+	lsr	a
+	bcc	continueScreenLoop
+	lda	continueCursor
+	sta	stageNum
+	rts
+; ---------------------------------------------------------------------------
+
+continueScreenUpPressed:
+	lda	continueCursor
+	cmp	highestReachedStageNum
+	bcs	continueScreenLoop
+	inc	continueCursor
+	bne	loc_B36B
+
+continueScreenDownPressed:
+	dec	continueCursor
+	bpl	loc_B36B
+	inc	continueCursor
+	beq	continueScreenLoop
+
+loc_B36B:
+	lda	#SFX_MENU
+	jsr	PlaySound
+	jmp	continueScreenLoop
+; End of function ShowContinue
+
+; ---------------------------------------------------------------------------
+continueText:
+	db	'CONTINUE',0
+	db	'FROM',0
+	db	'-1 -',0
+continueTextPtr:
+	dw	continueText

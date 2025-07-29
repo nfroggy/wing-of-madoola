@@ -5,7 +5,7 @@ This disassembly builds a 1:1 copy of the *Wing of Madoola* PRG ROM. You will ne
 This code is (c) 1986 Sunsoft. I hope that they won't care since this repo can't be used to create a runnable game by itself, but I'll take it down if they ask. I place the variables/comments/other textual content in the public domain.
 
 ## Project status
-At this point, there are no hardcoded addresses in the disassembly. You can add/remove/shift around stuff at will. All RAM variables/buffers, all used subroutines, and most unused subroutines have names. Most of the code is currently in one file, and some of it (especially the object and sound code) is very sparsely commented.
+At this point, there are no hardcoded addresses in the disassembly. You can add/remove/shift around stuff at will. All RAM variables/buffers, all used subroutines, and most unused subroutines have names. The game code is split up into (somewhat) logical files. Some of the code (especially the object and sound code) is very sparsely commented.
 
 ## Build instructions
 1. Make sure you cloned the repo with `git clone --recurse-submodules` so you also pull in the assembler code.
