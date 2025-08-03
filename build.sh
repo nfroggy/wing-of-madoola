@@ -6,7 +6,7 @@ then
     exit -1
 fi
 
-if [ ! -f a65n/build/a65n ]
+if [ ! -f a65n/build/a65n ] || find a65n -type f -newer a65n/build/a65n | grep -q .
 then
     echo "a65n not found, building..."
     cd a65n
@@ -30,7 +30,7 @@ then
     mkdir out
 fi
 
-a65n/build/a65n madoola.asm -l out/madoola.lst -o out/madoola.prg
+a65n/build/a65n src/madoola.asm -b src -l out/madoola.lst -o out/madoola.prg
 if [ $? -ne 0 ]
 then
     echo "Build failed"
