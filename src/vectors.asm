@@ -13,13 +13,13 @@ ResetVector:
 	lda	#$40
 	sta	$4017	; disable APU IRQ
 
-loc_B4AE:
+.wait1:
 	ldx	$2002
-	bpl	loc_B4AE
+	bpl	.wait1
 
-loc_B4B3:
+.wait2:
 	ldx	$2002
-	bpl	loc_B4B3
+	bpl	.wait2
 	jsr	InitSoundEngine
 	ldx	#$E0	; clear $E0 - $FF
 	ldy	#0
@@ -31,7 +31,7 @@ loc_B4B3:
 	lda	#$1E
 	sta	ppumaskCopy
 	sta	$2001
-	jmp	startGameCode
+	jmp	StartGameCode
 
 ; =============== S U B R O U T I N E =======================================
 
@@ -61,11 +61,11 @@ NMIVector:
 	pha
 	jsr	DisableBGAndSprites
 	lda	doneFrame
-	beq	loc_B4F6
-	jmp	exitNMIVector
+	beq	.doNMI
+	jmp	.exit
 ; ---------------------------------------------------------------------------
 
-loc_B4F6:
+.doNMI:
 	dec	doneFrame
 	lda	mapperValue	; write to sunsoft-1 mapper
 	sta	$6000
@@ -74,7 +74,7 @@ loc_B4F6:
 	lda	#2	; DMA $200-$2FF to PPU OAM
 	sta	$4014
 	lda	vramWriteCount
-	bne	doVramWrite
+	bne	.doVramWrite
 	jsr	SetPaletteBGColors
 	lda	$2002
 	lda	#$3F	; write to palette
@@ -84,10 +84,10 @@ loc_B4F6:
 	ldx	#0
 	ldy	#$1F
 	lda	flashTimer
-	beq	loc_B537
+	beq	.normalPalette
 	dec	flashTimer
 
-loc_B525:
+.flashPalette:
 	lda	frameCounter
 	asl	a	; mess with the palette to make the screen flash
 	asl	a
@@ -97,29 +97,29 @@ loc_B525:
 	sta	$2007
 	inx
 	dey
-	bpl	loc_B525
-	bmi	loc_B540
+	bpl	.flashPalette
+	bmi	.resetPPUAddr
 
-loc_B537:
+.normalPalette:
 	lda	paletteBuffer,x
 	sta	$2007
 	inx
 	dey
-	bpl	loc_B537
+	bpl	.normalPalette
 
-loc_B540:
+.resetPPUAddr:
 	lda	#$3F	; reset ppu address
 	sta	$2006
 	lda	#0
 	sta	$2006
 	sta	$2006
 	sta	$2006
-	beq	loc_B555
+	beq	.writePPURegs
 
-doVramWrite:
+.doVramWrite:
 	jsr	CopyToVRAM
 
-loc_B555:
+.writePPURegs:
 	lda	ppuctrlCopy
 	sta	$2000
 	lda	$2002
@@ -128,7 +128,7 @@ loc_B555:
 	lda	ppuYScrollCopy
 	sta	$2005
 
-exitNMIVector:
+.exit:
 	dec	frameTimer
 	jsr	EnableBGAndSprites
 	pla

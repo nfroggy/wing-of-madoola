@@ -19,7 +19,7 @@
 
 ; ---------------------------------------------------------------------------
 
-	incl	"main.asm"		; game init, main game loop
+	incl	"game.asm"		; game init, main game loop
 	incl	"keyword.asm"		; keyword screen
 	incl	"ending.asm"		; ending scene
 	incl	"screens.asm"		; status/stage/continue screens

@@ -1,4 +1,4 @@
-startGameCode:
+StartGameCode:
 	jsr	CopyTitleScreenMusicToRAM
 	jsr	TitleScreenLoop
 	lda	joy2
@@ -176,7 +176,7 @@ loc_AAAB:
 	jsr	ShowEnding
 	lda	#0			; disable continues
 	sta	gamePlayedFlag
-	jmp	startGameCode		; restart game
+	jmp	StartGameCode		; restart game
 ; ---------------------------------------------------------------------------
 
 loc_AABF:
@@ -198,7 +198,7 @@ loc_AAD4:
 
 loc_AAD7:
 	jsr	ShowGameOver
-	jmp	startGameCode
+	jmp	StartGameCode
 ; ---------------------------------------------------------------------------
 
 initDisplayKeyword:
