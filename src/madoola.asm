@@ -43,6 +43,7 @@
 	incl	"object_handler.asm"	; spawns enemies and runs each object's code
 	incl	"objects2.asm"		; objects that were likely made later in the game's development
 	incl	"sound.asm"		; sound engine & sound data
+	incl	"padding.asm"	; garbage data at the end of the rom
 
 ; ---------------------------------------------------------------------------
 	org	$FFFA		; vector table

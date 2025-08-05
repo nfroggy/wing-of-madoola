@@ -1,26 +1,26 @@
 StartGameCode:
-	jsr	CopyTitleScreenMusicToRAM
+	jsr	CopyCHRMusicToRAM
 	jsr	TitleScreenLoop
 	lda	joy2
 	nop	; in the sample version of the game, this said "bmi startMaxxedOutGame"
 	nop	; but it got patched out of the retail version
 	lda	joy1
 	and	#JOY_SELECT	; was select pressed?
-	beq	startNewGame	; no? start new game
+	beq	.startNewGame	; no? start new game
 	lda	gamePlayedFlag
 	cmp	#1
-	bne	startNewGame
+	bne	.startNewGame
 	lda	cheatFlag	; cheatFlag always gets set to 2 when gamePlayedFlag gets
 	cmp	#2		; set to 1, so this code doesn't do anything AFAIK
-	bne	startMaxxedOutGame
+	bne	.startMaxxedOutGame
 	lda	#0
 	sta	healthLo
 	lda	#$10
 	sta	healthHi
-	jmp	getStageReady
+	jmp	.initGame
 ; ---------------------------------------------------------------------------
 
-startMaxxedOutGame:
+.startMaxxedOutGame:
 	lda	#$90
 	sta	healthLo
 	lda	#$99
@@ -36,9 +36,9 @@ startMaxxedOutGame:
 	lda	#$F
 	sta	highestReachedStageNum
 	lda	#3
-	bne	loc_A9E1
+	bne	.initWeapons
 
-startNewGame:
+.startNewGame:
 	lda	#0
 	sta	healthLo
 	lda	#$10
@@ -55,38 +55,37 @@ startNewGame:
 	sta	highestReachedStageNum
 	lda	#0
 
-loc_A9E1:
+.initWeapons:
 	ldx	#7
-
-loc_A9E3:
+.weaponInitLoop:
 	sta	weaponLevels,x
 	dex
-	bpl	loc_A9E3
+	bpl	.weaponInitLoop
 	inc	weaponLevels	; start the regular sword at level 1
 	lda	#1
 	sta	gamePlayedFlag
 	lda	#2
 	sta	cheatFlag
+
 	lda	#0
 	ldx	#7
-
-loc_A9F6:
+.itemInitLoop:
 	sta	itemCollectedFlags,x
 	dex
-	bpl	loc_A9F6
-	ldx	#$F
+	bpl	.itemInitLoop
 
-loc_A9FE:
+	ldx	#$F
+.bossInitLoop:
 	sta	bossDefeatedFlags,x
 	dex
-	bpl	loc_A9FE
+	bpl	.bossInitLoop
 	lda	#0
 	sta	hasWingFlag
 	sta	usingWingFlag
 	sta	orbCollectedFlag
 	sta	keywordDisplayFlag
 
-getStageReady:
+.initGame:
 	jsr	ClearOamBuffer
 	jsr	DisableBGAndSprites
 	jsr	DisableNMI
@@ -98,10 +97,10 @@ getStageReady:
 	sta	pausedFlag
 	sta	currentWeapon
 	lda	highestReachedStageNum
-	beq	startStage	; if the player has previously gotten past stage 1,
+	beq	.initStage	; if the player has previously gotten past stage 1,
 	jsr	ShowContinue	; show the continue screen
 
-startStage:
+.initStage:
 	lda	maxMagicLo
 	sta	magicLo
 	lda	maxMagicHi
@@ -129,11 +128,11 @@ startStage:
 	lda	stageInitTbl+2,x
 	sta	roomNum
 
-loc_AA65:
+.initRoom:
 	jsr	InitRoomVars
 	jsr	PlayRoomSong
 
-mainGameLoop:
+.mainLoop:
 	inc	frameCounter
 	jsr	HandlePaletteShifting
 	jsr	WaitVblank
@@ -141,67 +140,67 @@ mainGameLoop:
 	jsr	nullsub_1
 	jsr	HandlePause	; check if start was pressed, do pause menu stuff, etc
 	lda	pausedFlag
-	bne	afterGameplayStuff
+	bne	.afterGameplayStuff
 	jsr	ClearOamBuffer
 	jsr	DisplayHealthAndMagic
 	jsr	HandleObjects
 	jsr	HandleScrolling
 	jsr	HandleRoomChange
 
-afterGameplayStuff:
+.afterGameplayStuff:
 	lda	keywordDisplayFlag
-	beq	dontShowKeyword
-	bpl	initDisplayKeyword
+	beq	.noKeyword
+	bpl	.doKeyword
 
-dontShowKeyword:
+.noKeyword:
 	lda	roomChangeTimer
 	cmp	#1
-	beq	loc_AA9E
-	jmp	mainGameLoop
+	beq	.doRoomChange
+	jmp	.mainLoop
 ; ---------------------------------------------------------------------------
 
-loc_AA9E:
+.doRoomChange:
 	lda	objectTable
 	cmp	#OBJ_LUCIA_DOORWAY	; check for lucia warp door object
-	beq	loc_AAAB
+	beq	.warpDoor
 	cmp	#OBJ_LUCIA_DYING	; check for lucia dying object
-	beq	loc_AAD7
-	bne	loc_AABF		; otherwise, it's a level transition
+	beq	.dying
+	bne	.levelTransition	; otherwise, it's a level transition
 
-loc_AAAB:
+.warpDoor:
 	jsr	GetDoorPlayerPos
-	lda	objType
-	bne	loc_AA65
-	jsr	CopyTitleScreenMusicToRAM
+	lda	objType		; should we trigger the ending?
+	bne	.initRoom	; if not, go to the room we moved to
+	jsr	CopyCHRMusicToRAM
 	jsr	ShowEnding
 	lda	#0			; disable continues
 	sta	gamePlayedFlag
 	jmp	StartGameCode		; restart game
 ; ---------------------------------------------------------------------------
 
-loc_AABF:
+.levelTransition:
 	lda	stageNum
 	clc
 	adc	#1
 	and	#$F
 	sta	stageNum
 	cmp	highestReachedStageNum
-	beq	loc_AAD4
-	bcc	loc_AAD4
+	beq	.notHighest
+	bcc	.notHighest
 	sta	highestReachedStageNum
 	lda	#0
 	sta	orbCollectedFlag
 
-loc_AAD4:
-	jmp	startStage
+.notHighest:
+	jmp	.initStage
 ; ---------------------------------------------------------------------------
 
-loc_AAD7:
+.dying:
 	jsr	ShowGameOver
 	jmp	StartGameCode
 ; ---------------------------------------------------------------------------
 
-initDisplayKeyword:
+.doKeyword:
 	jsr	InitSoundEngine
 	lda	#MUS_CLEAR
 	jsr	PlaySound
@@ -211,10 +210,11 @@ initDisplayKeyword:
 	lda	#0
 	sta	currObjectOffset
 	jsr	CopyObjectToZeroPage
-	jmp	loc_AA65
+	jmp	.initRoom
 ; ---------------------------------------------------------------------------
 stageInitTbl:
-	db	$06,$0E,$00	; start x pos (high), start y pos (high), room number
+	; start x pos (high), start y pos (high), room number
+	db	$06,$0E,$00
 	db	$06,$0E,$01
 	db	$05,$0A,$03
 	db	$05,$0A,$05
@@ -240,27 +240,27 @@ PlayRoomSong:
 	and	#$F
 	tax
 	cmp	#$E		; are we in room 15? (stage 16's room)
-	bne	loc_AB3E
+	bne	.loadFromTable
 	lda	orbCollectedFlag
-	bne	locret_AB4E	; if darutos has been killed, don't play any music
+	bne	.return	; if darutos has been killed, don't play any music
 	lda	hasWingFlag	; if Lucia has the wing of madoola, play the castle theme
-	bne	loc_AB3E
+	bne	.loadFromTable
 	lda	#MUS_BOSS	; otherwise play the boss room theme
-	bne	loc_AB4B
+	bne	.play
 
-loc_AB3E:
+.loadFromTable:
 	lda	roomSongTable,x
 	cmp	#MUS_BOSS	; are we playing boss music?
-	bne	loc_AB4B
+	bne	.play
 	ldx	bossActiveFlag
-	bne	loc_AB4B	; has the boss been killed?
+	bne	.play	; has the boss been killed?
 	lda	#MUS_ITEM	; if so, play boss killed music
 
-loc_AB4B:
+.play:
 	jmp	PlaySound
 ; ---------------------------------------------------------------------------
 
-locret_AB4E:
+.return:
 	rts
 ; End of function PlayRoomSong
 
@@ -287,7 +287,7 @@ roomSongTable:
 
 ; The game stores its title screen and ending music in CHR ROM, this copies it to $400 in RAM
 
-CopyTitleScreenMusicToRAM:
+CopyCHRMusicToRAM:
 	jsr	DisableNMI
 	jsr	DisableBGAndSprites
 	lda	$2002
@@ -304,16 +304,16 @@ CopyTitleScreenMusicToRAM:
 	ldx	#4
 	ldy	#0
 
-loc_AB84:
+.loop:
 	lda	$2007
 	sta	(0),y
 	iny
-	bne	loc_AB84
+	bne	.loop
 	inc	$1
 	dex
-	bne	loc_AB84
+	bne	.loop
 	rts
-; End of function CopyTitleScreenMusicToRAM
+; End of function CopyCHRMusicToRAM
 
 
 ; =============== S U B R O U T I N E =======================================
@@ -321,58 +321,59 @@ loc_AB84:
 
 HandlePause:
 	lda	pausedFlag
-	beq	notPaused
+	beq	.notPaused
+
 	lda	joy1Edge
-	and	#$10
-	beq	loc_AB9F
-	jmp	unpauseGame
+	and	#JOY_START
+	beq	.stillPaused
+	jmp	.unpause
 ; ---------------------------------------------------------------------------
 
-loc_AB9F:
+.stillPaused:
 	lda	joy1Edge
-	and	#$20
-	bne	changeWeapon
-	beq	loc_ABCD
+	and	#JOY_SELECT
+	bne	.changeWeapon
+	beq	.dispWeapon
 
-notPaused:
+.notPaused:
 	lda	joy1Edge
-	and	#$10
-	bne	pauseGame
-	jmp	locret_AC18
+	and	#JOY_START
+	bne	.pauseGame
+	jmp	.return
 ; ---------------------------------------------------------------------------
 
-pauseGame:
+.pauseGame:
 	jsr	InitSoundEngine
 	lda	#SFX_PAUSE
 	jsr	PlaySound
 	dec	pausedFlag
-	bne	loc_ABCD
+	bne	.dispWeapon
 
-changeWeapon:
+.changeWeapon:
 	lda	#SFX_SELECT
 	jsr	PlaySound
 	inc	currentWeapon
 	ldx	currentWeapon
 	cpx	#7
-	bcc	loc_ABCD
+	bcc	.dispWeapon
 	ldx	#0
 	stx	currentWeapon
 
-loc_ABCD:
+.dispWeapon:
 	jsr	EraseAllWeaponObjects
 	lda	#0
 	sta	continueCursor
 	jsr	MagicSubtract
-	bcc	changeWeapon		; skip past this weapon if we don't have enough magic to use it
+	bcc	.changeWeapon		; skip past this weapon if we don't have enough magic to use it
 	ldx	currentWeapon
 	lda	weaponLevels,x
-	beq	changeWeapon		; skip past this weapon if we don't have it
-	cmp	#4
-	bcc	loc_ABE7
-	lda	#3			; max weapon level is 3
+	beq	.changeWeapon		; skip past this weapon if we don't have it
+	cmp	#4		; if weapon level is >= 4, set it to 3
+	bcc	.noClamp
+	lda	#3
 	sta	weaponLevels,x
 
-loc_ABE7:
+.noClamp:
 	ldx	currentWeapon
 	lda	pauseWeaponPalettes,x
 	tay
@@ -385,22 +386,22 @@ loc_ABE7:
 	sty	oamBuffer+$12
 	ldx	#7
 
-loc_AC02:
+.loop:
 	lda	pauseWeaponBackdrop,x	; write OAM values for the blue square that's behind the weapon
 	sta	oamBuffer+$14,x
 	dex
-	bpl	loc_AC02
+	bpl	.loop
 	rts
 ; ---------------------------------------------------------------------------
 
-unpauseGame:
+.unpause:
 	jsr	PlayRoomSong
 	lda	#SFX_PAUSE
 	jsr	PlaySound
 	lda	#0
 	sta	pausedFlag
 
-locret_AC18:
+.return:
 	rts
 ; End of function HandlePause
 
@@ -438,8 +439,7 @@ pauseWeaponBackdrop:
 EraseAllWeaponObjects:
 	ldy	#8	; 8 weapon slots
 	ldx	#$B	; start at second object
-
-loc_AC33:
+.loop1:
 	lda	#0
 	sta	objectTable,x
 	txa
@@ -447,14 +447,14 @@ loc_AC33:
 	adc	#$B
 	tax
 	dey
-	bne	loc_AC33
-	ldx	#$F
-	lda	#0
+	bne	.loop1
 
-loc_AC44:
+	ldx	#$F ; 8 projectile x/y pairs total
+	lda	#0
+.loop2:
 	sta	luciaProjectileCoords,x
 	dex
-	bpl	loc_AC44
+	bpl	.loop2
 	rts
 ; End of function EraseAllWeaponObjects
 
@@ -465,10 +465,10 @@ loc_AC44:
 HandlePaletteShifting:
 	lda	mapperValue
 	and	#$30
-	bne	locret_AC62
+	bne	.return
 	lda	frameCounter
 	and	#3
-	bne	locret_AC62
+	bne	.return
 	ldx	paletteBuffer+$F
 	lda	paletteBuffer+$E
 	sta	paletteBuffer+$F
@@ -476,6 +476,6 @@ HandlePaletteShifting:
 	sta	paletteBuffer+$E
 	stx	paletteBuffer+$D
 
-locret_AC62:
+.return:
 	rts
 ; End of function HandlePaletteShifting
