@@ -8,29 +8,26 @@
 ; $85/$86: Address of text to print
 
 PrintText:
-	jsr	SetPPUAddr	; In:
-; X: PPU Address high
-; Y: PPU Address low
+	jsr	SetPPUAddr
 	ldy	#0
-
-printCopyLoop:
+.loop:
 	lda	(tmpPtrLo),y	; read from text pointer
-	beq	loc_B07F	; if it's 0, exit the loop
+	beq	.done	; if it's 0, exit the loop
 	sta	$2007	; else write to vram
 	iny
-	jmp	printCopyLoop	; read from text pointer
+	jmp	.loop	; read from text pointer
 ; ---------------------------------------------------------------------------
 
-loc_B07F:
+.done:
 	iny
 	tya
 	clc
 	adc	tmpPtrLo	; add the length of the string to the start pos
 	sta	tmpPtrLo	; and overwrite the pointer with the result
-	bcc	locret_B08A
+	bcc	.return
 	inc	tmpPtrHi
 
-locret_B08A:
+.return:
 	rts
 ; End of function PrintText
 
@@ -44,15 +41,15 @@ DispStatus:
 	jsr	ClearNametable
 	jsr	ResetScrollPos
 	jsr	ClearOamBuffer
-	ldx	#$F
 
-loc_B09C:
+	ldx	#$F
+.paletteCopy:
 	lda	gameSpritePalettes,x
 	sta	paletteBuffer+$10,x
 	lda	statusBGPalette,x
 	sta	paletteBuffer,x
 	dex
-	bpl	loc_B09C
+	bpl	.paletteCopy
 	lda	#0
 	sta	$2000
 	lda	statusTextPtr
@@ -92,17 +89,17 @@ loc_B09C:
 	ldx	#$23
 	ldy	#$2A
 	jsr	PrintText	; boots
+
 	lda	#0
 	sta	oamWriteCursor
 	lda	#7
 	sta	tmpCount
 	lda	#$C5
 	sta	spriteY
-
-loc_B111:
+.weaponLoop:
 	ldx	tmpCount
 	lda	weaponLevels,x
-	beq	loc_B14D
+	beq	.skipWeapon
 	sta	tmpCount2
 	lda	#$90
 	sta	spriteX
@@ -111,8 +108,8 @@ loc_B111:
 	lda	statusItemTiles,x
 	sta	spriteTileNum
 
-loc_B127:
-	ldx	oamWriteCursor
+.levelLoop:
+	ldx	oamWriteCursor	; draw one weapon sprite for each level
 	lda	spriteY
 	sta	oamBuffer,x
 	lda	spriteTileNum
@@ -129,15 +126,15 @@ loc_B127:
 	adc	#4
 	sta	oamWriteCursor
 	dec	tmpCount2
-	bne	loc_B127
+	bne	.levelLoop
 
-loc_B14D:
+.skipWeapon:
 	lda	spriteY
 	sec
 	sbc	#$10
 	sta	spriteY
 	dec	tmpCount
-	bpl	loc_B111
+	bpl	.weaponLoop
 	ldx	#healthLo
 	jsr	WordToString
 	ldx	#$20
@@ -241,12 +238,12 @@ DispStageNumber:
 	sta	$2006
 	ldx	#0
 
-loc_B264:
+.loop:
 	lda	stageText,x
 	sta	$2007	; write the "STAGE" text
 	inx
 	cpx	#6
-	bne	loc_B264
+	bne	.loop
 	lda	stageNum
 	asl	a
 	tax
@@ -295,14 +292,14 @@ ShowGameOver:
 	sta	$2006
 	lda	#$EC
 	sta	$2006
-	ldx	#0
 
-loc_B2CA:
+	ldx	#0
+.loop:
 	lda	gameOverText,x
 	sta	$2007
 	inx
 	cpx	#9
-	bne	loc_B2CA
+	bne	.loop
 	lda	#$70
 	jsr	WriteMapper
 	jsr	EnableNMI
@@ -341,7 +338,7 @@ ShowContinue:
 	lda	#0
 	sta	continueCursor
 
-continueScreenLoop:
+.loop:
 	lda	#$2F
 	sta	$2
 	lda	#$22
@@ -364,33 +361,33 @@ continueScreenLoop:
 	lsr	a
 	lsr	a
 	lsr	a
-	bcs	continueScreenDownPressed
+	bcs	.downPressed
 	lsr	a
-	bcs	continueScreenUpPressed
+	bcs	.upPressed
 	lsr	a
-	bcc	continueScreenLoop
+	bcc	.loop
 	lda	continueCursor
 	sta	stageNum
 	rts
 ; ---------------------------------------------------------------------------
 
-continueScreenUpPressed:
+.upPressed:
 	lda	continueCursor
 	cmp	highestReachedStageNum
-	bcs	continueScreenLoop
+	bcs	.loop
 	inc	continueCursor
-	bne	loc_B36B
+	bne	.playMenuSound
 
-continueScreenDownPressed:
+.downPressed:
 	dec	continueCursor
-	bpl	loc_B36B
+	bpl	.playMenuSound
 	inc	continueCursor
-	beq	continueScreenLoop
+	beq	.loop
 
-loc_B36B:
+.playMenuSound:
 	lda	#SFX_MENU
 	jsr	PlaySound
-	jmp	continueScreenLoop
+	jmp	.loop
 ; End of function ShowContinue
 
 ; ---------------------------------------------------------------------------
