@@ -16,8 +16,9 @@ WaitNFrames:
 
 ; =============== S U B R O U T I N E =======================================
 
-; Converts a word to an ASCII numeric string
+; Converts a 16-bit word to an ASCII numeric string
 ; In: X- Address to low byte of the word
+; Out: Writes the string to $04, writes $0004 to tmpPtr
 ; Clobbers $00-$08
 
 WordToString:
@@ -25,14 +26,14 @@ WordToString:
 	ldx	#3
 	ldy	#0
 
-loc_B39C:
+.loop:
 	lda	0,x
 	clc
 	adc	#'0'	; convert from digit to ascii
 	sta	4,y
 	iny
 	dex
-	bpl	loc_B39C
+	bpl	.loop
 	lda	#0
 	sta	$8	; null-terminate the string
 	lda	#4	; write the string pointer
@@ -149,9 +150,9 @@ ReadControllers:
 	stx	$4016
 	dex
 	stx	$4016
-	ldx	#8
 
-loc_B418:
+	ldx	#8
+.readLoop:
 	lda	$4016	; read controller 1
 	and	#3
 	cmp	#1
@@ -161,10 +162,10 @@ loc_B418:
 	cmp	#1
 	rol	joy2Edge
 	dex
-	bne	loc_B418	; read controller 1
-	ldx	#1
+	bne	.readLoop
 
-loc_B42F:
+	ldx	#1
+.calcEdge:
 	ldy	joy1Edge,x	; joy values we just read into Y and A
 	tya
 	eor	joy1,x	; XOR last frame's joy vales
@@ -172,7 +173,7 @@ loc_B42F:
 	sta	joy1Edge,x
 	sty	joy1,x
 	dex
-	bpl	loc_B42F	; joy values we just read into Y and A
+	bpl	.calcEdge
 	rts
 ; End of function ReadControllers
 
@@ -190,10 +191,10 @@ ClearMem:
 	dey
 	lda	#0
 
-loc_B446:
+.loop:
 	sta	($E),y
 	dey
-	bpl	loc_B446
+	bpl	.loop
 	rts
 ; End of function ClearMem
 
@@ -209,14 +210,14 @@ ClearOamBuffer:
 	stx	!oamLen
 	lda	#$F0
 
-loc_B453:
+.loop:
 	sta	oamBuffer,x	; put sprite y offscreen
 	inx
 	inx
 	inx
 	inx
-	bne	loc_B453	; put sprite y offscreen
-	jmp	loc_C64B
+	bne	.loop
+	jmp	ResetOamWritePos
 ; End of function ClearOamBuffer
 
 
@@ -241,9 +242,9 @@ WaitVblank:
 	lda	#0
 	sta	doneFrame
 
-loc_B469:
+.loop:
 	lda	doneFrame
-	beq	loc_B469
+	beq	.loop
 	jmp	RunSoundEngine
 ; End of function WaitVblank
 
@@ -284,7 +285,7 @@ ResetScrollPosRight:
 
 	lda	ppuctrlCopy
 	ora	#1	; set rightmost nametable
-	bne	loc_B490
+	bne	ResetScrollPosCommon
 ; End of function ResetScrollPosRight
 
 
@@ -295,7 +296,7 @@ ResetScrollPos:
 	lda	ppuctrlCopy
 	and	#$FE	; set leftmost nametable
 
-loc_B490:
+ResetScrollPosCommon:
 	sta	ppuctrlCopy
 	lda	#0
 	sta	ppuXScrollCopy

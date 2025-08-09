@@ -9,29 +9,27 @@ DebugSpriteViewer:
 	jsr	ClearNametable
 	lda	#$A0
 	sta	$2000
-	lda	#8
+	lda	#$08	; vram write address low
 	sta	$0
-	lda	#$21
+	lda	#$21	; vram write address high
 	sta	$1
-	lda	#0
+	lda	#0	; tile number
 	sta	$2
-	ldy	#$10
-
-loc_B58F:
-	lda	$2002
-	lda	$1
+	ldy	#$10	; number of rows to write
+.drawLoop:
+	lda	$2002	; clear write latch
+	lda	$1	; write the address
 	sta	$2006
 	lda	$0
 	sta	$2006
-	ldx	#$10
+	ldx	#$10	; number of tiles per row
 	lda	$2
-
-loc_B5A0:
+.drawRow:
 	sta	$2007
 	clc
-	adc	#$10
+	adc	#$10	; this is for displaying sprite graphics, so tile numbers increment by 1 per row and 16 per column
 	dex
-	bne	loc_B5A0
+	bne	.drawRow
 	clc
 	adc	#1
 	sta	$2
@@ -39,32 +37,32 @@ loc_B5A0:
 	clc
 	adc	#$20
 	sta	$0
-	bcc	loc_B5B9
+	bcc	.noCarry
 	inc	$1
-
-loc_B5B9:
+.noCarry:
 	dey
-	bne	loc_B58F
+	bne	.drawLoop
+
 	lda	#$A0
 	sta	ppuctrlCopy
 	jsr	EnableBGAndSprites
 	jsr	EnableNMI
 
-loc_B5C6:
+.displayLoop:
 	jsr	WaitVblank
 	jsr	ReadControllers
 	jsr	nullsub_1
 	lda	joy1Edge
-	and	#$20	; pressing select advances to the next CHR bank
-	beq	loc_B5DD
+	and	#JOY_SELECT	; pressing select advances to the next CHR bank
+	beq	.noSelect
 	lda	mapperValue
 	clc
 	adc	#1
 	jsr	WriteMapper
 
-loc_B5DD:
+.noSelect:
 	lda	joy1
-	and	#$10	; pressing start quits the viewer
-	beq	loc_B5C6
+	and	#JOY_START	; pressing start quits the viewer
+	beq	.displayLoop
 	rts
 ; End of function DebugSpriteViewer

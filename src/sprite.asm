@@ -264,13 +264,11 @@ locret_C64A:
 ; End of function CheckForFlicker
 
 ; ---------------------------------------------------------------------------
-; START OF FUNCTION CHUNK FOR ClearOamBuffer
 
-loc_C64B:
+ResetOamWritePos:
 	lda	oamWriteDirectionFlag
 	eor	#$80
 	sta	oamWriteDirectionFlag
 	lda	#0
 	sta	oamWriteCursor
 	rts
-; END OF FUNCTION CHUNK FOR ClearOamBuffer
