@@ -46,8 +46,8 @@ fi
 
 echo "out/madoola.nes successfully created"
 good_checksum="57abe0373bba73b412d32f061bf685a4a0035a5be58e34b5398ba8970a9263a7"
-echo "$good_checksum out/madoola.nes" | sha256sum --check --status
-if [ $? -eq 0 ]
+checksum="$(sha256sum out/madoola.nes | awk '{ print $1 }')"
+if [ $checksum == $good_checksum ]
 then
     echo "built ROM matches original"
 fi
