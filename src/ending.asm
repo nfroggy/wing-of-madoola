@@ -3,20 +3,20 @@
 
 ShowEndingAnimation:
 	lda	#0
-	sta	nametablePosY
+	sta	endingCursor
 	sta	oamWriteDirectionFlag
 	sta	objDirection
-	lda	#$63	; 'c'
+	lda	#$63
 	jsr	WriteMapper
 	jsr	EnableNMI
 	jsr	WaitVblank
 	ldx	#$F
 
-loc_ACEE:
+.copyPalette:
 	lda	endingSpritePalette,x
 	sta	paletteBuffer+$10,x
 	dex
-	bpl	loc_ACEE
+	bpl	.copyPalette
 	lda	#30	; show prince lying on ground
 	jsr	EndingPrinceSprite
 	lda	#0	; load lucia's sprite offscreen
@@ -65,7 +65,7 @@ EndingLuciaRun:
 	lda	#8
 	sta	spriteX
 
-loc_AD56:
+.loop:
 	jsr	WaitVblank
 	lda	#$10
 	sta	oamWriteCursor
@@ -93,11 +93,11 @@ loc_AD56:
 	sta	spriteY
 	lda	spriteX
 	cmp	#120
-	beq	locret_ADB6
+	beq EndingSprite2.ret	
 	clc
 	adc	#1
 	sta	spriteX
-	jmp	loc_AD56
+	jmp .loop	
 ; End of function EndingLuciaRun
 
 ; ---------------------------------------------------------------------------
@@ -111,9 +111,9 @@ luciaRunTiles:
 
 
 EndingPrinceSprite:
-	sta	nametablePosX
+	sta	endingTimer
 	lda	#0
-	beq	loc_ADA1
+	beq EndingSpriteCommon
 ; End of function EndingPrinceSprite
 
 
@@ -121,23 +121,23 @@ EndingPrinceSprite:
 
 
 EndingLuciaSprite:
-	sta	nametablePosX
+	sta	endingTimer
 	lda	#$10
 
-loc_ADA1:
+EndingSpriteCommon:
 	sta	oamWriteCursor
 	jsr	LoadEndingSprite
 	jsr	Write16x16SpriteToOAMWithDir
 
-loc_ADA9:
+EndingSprite2:
 	jsr	LoadEndingSprite
 	jsr	Write16x16SpriteToOAMWithDir
-	lda	nametablePosX
-	beq	locret_ADB6
+	lda endingTimer	
+	beq .ret
 	jmp	WaitNFrames
 ; ---------------------------------------------------------------------------
 
-locret_ADB6:
+.ret:
 	rts
 ; End of function EndingLuciaSprite
 
@@ -148,7 +148,7 @@ locret_ADB6:
 ; than being next to each other.
 
 EndingPrinceSuitSprite:
-	sta	nametablePosX
+	sta	endingTimer
 	lda	#0
 	sta	oamWriteCursor
 	jsr	LoadEndingSprite
@@ -162,7 +162,7 @@ EndingPrinceSuitSprite:
 	adc	#2
 	sta	spriteTileNum
 	jsr	WriteSpriteToOAMWithDir
-	jmp	loc_ADA9
+	jmp EndingSprite2
 ; End of function EndingPrinceSuitSprite
 
 
@@ -170,7 +170,7 @@ EndingPrinceSuitSprite:
 
 
 LoadEndingSprite:
-	ldx	nametablePosY	; used here as a read cursor for that array
+	ldx	endingCursor
 	lda	endingSpriteTbl,x
 	sta	spriteY
 	inx
@@ -183,7 +183,7 @@ LoadEndingSprite:
 	lda	endingSpriteTbl,x
 	sta	spriteX
 	inx
-	stx	nametablePosY
+	stx	endingCursor
 	rts
 ; End of function LoadEndingSprite
 
@@ -232,7 +232,7 @@ ShowEnding:
 	sta	ppuYScrollCopy
 	sta	nametablePosY
 	sta	vramWriteCount
-	lda	#1
+	lda	#MUS_ENDING
 	jsr	PlaySound
 	jsr	WaitVblank
 	lda	endingTextPtr
@@ -240,7 +240,7 @@ ShowEnding:
 	lda	endingTextPtr+1
 	sta	tmpPtrHi
 
-loc_AE7F:
+.msgScrollLoop:
 	jsr	EndingPrintMsgLine	; loop for scrolling up the ending message
 	jsr	EndingScroll4Lines
 	jsr	EndingPrintBlankLine
@@ -252,17 +252,17 @@ loc_AE7F:
 	sta	nametablePosY
 	ldy	#0
 	lda	(tmpPtrLo),y
-	bne	loc_AE7F		; check for end of the message
-	lda	#6			; wait 6 seconds on "the end" text
+	bne .msgScrollLoop  ; check for end of the message
 
-loc_AE9D:
+	lda	#6			; wait 6 seconds on "the end" text
+.dispTheEnd:
 	pha
 	lda	#60
 	jsr	WaitNFrames
 	pla
 	sec
 	sbc	#1
-	bne	loc_AE9D
+	bne .dispTheEnd
 	rts
 ; End of function ShowEnding
 
@@ -273,7 +273,7 @@ loc_AE9D:
 EndingScroll4Lines:
 	lda	#4
 
-loc_AEAC:
+.loop:
 	pha
 	lda	#1			; scroll down 1 px (moves text up)
 	jsr	ScrollYRelative
@@ -284,7 +284,7 @@ loc_AEAC:
 	pla
 	sec
 	sbc	#1
-	bne	loc_AEAC
+	bne	.loop
 	rts
 ; End of function EndingScroll4Lines
 
@@ -342,20 +342,20 @@ endingTextPtr:
 MoveEndingSpritesUp:
 	ldx	#$24
 
-loc_AFFD:
+.loop:
 	lda	oamBuffer,x
-	cmp	#$F0
-	beq	loc_B00A
-	sec
+	cmp	#$F0    ; is the sprite's y pos offscreen?
+	beq .nextSprite	
+	sec     ; if not, move it up a pixel
 	sbc	#1
 	sta	oamBuffer,x
 
-loc_B00A:
+.nextSprite:
 	txa
 	sec
 	sbc	#4
 	tax
-	bpl	loc_AFFD
+	bpl .loop	
 	rts
 ; End of function MoveEndingSpritesUp
 
@@ -368,7 +368,7 @@ EndingPrintMsgLine:
 	lda	(tmpPtrLo),y
 	iny
 	cmp	#1
-	beq	loc_B040	; 1 = blank line
+	beq .setupNextLine   ; 1 = blank line
 	lda	#0
 	sta	$0
 	lda	nametablePosY
@@ -377,30 +377,30 @@ EndingPrintMsgLine:
 	jsr	VramWriteLinear
 	ldy	#0
 
-loc_B02B:
+.copyMsg:
 	lda	(tmpPtrLo),y
-	beq	loc_B036
+	beq .setupWrite	
 	sta	vramWriteBuff,x
 	iny
 	inx
-	bne	loc_B02B
+	bne	.copyMsg
 
-loc_B036:
+.setupWrite:
 	iny
 	sty	nametableStartY
 	stx	vramWriteCount
 	jsr	VramSetWriteCount
 	ldy	nametableStartY
 
-loc_B040:
+.setupNextLine:
 	tya	; add length of string to read cursor
 	clc
 	adc	tmpPtrLo
 	sta	tmpPtrLo
-	bcc	locret_B04A
+	bcc .ret
 	inc	tmpPtrHi
 
-locret_B04A:
+.ret:
 	rts
 ; End of function EndingPrintMsgLine
 
@@ -418,14 +418,14 @@ EndingPrintBlankLine:
 	sta	$1
 	jsr	CalcVRAMWriteAddr
 	jsr	VramWriteLinear
-	ldy	#$20	; ' '
-	lda	#$20	; ' '      ; ascii space character
+	ldy	#$20
+	lda	#' '
 
-loc_B063:
+.loop:
 	sta	vramWriteBuff,x
 	inx
 	dey
-	bne	loc_B063
+	bne .loop
 	stx	vramWriteCount
 	jmp	VramSetWriteCount
 ; End of function EndingPrintBlankLine

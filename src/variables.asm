@@ -4,6 +4,8 @@ roomChunkPtr	equ	$1c
 roomScreenPtr	equ	$1e
 nametablePosX	equ	$20
 nametablePosY	equ	$21
+endingTimer equ $20
+endingCursor    equ $21
 cameraXTiles	equ	$22
 cameraYTiles	equ	$23
 ; where to start copying to in the nametable
