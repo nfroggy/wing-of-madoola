@@ -3,25 +3,25 @@
 
 SwordObj:
 	lda	attackTimer
-	beq	loc_D4EF
+	beq	.erase
 	lda	#1
 	sta	spriteAttrs
 	lda	attackTimer
 	cmp	#6
-	bcs	loc_D4B8
+	bcs	.firstFrame
 	lda	#1
-	bne	loc_D4BA
+	bne	.checkDir
 
-loc_D4B8:
+.firstFrame:
 	lda	#0
 
-loc_D4BA:
+.checkDir:
 	ldx	objectTable+$A	; player direction
-	bpl	loc_D4C2	; branch if facing right
+	bpl	.facingRight ; branch if facing right
 	clc
 	adc	#2
 
-loc_D4C2:
+.facingRight:
 	tax
 	lda	spriteX
 	clc
@@ -40,25 +40,25 @@ loc_D4C2:
 	sta	spriteTileNum
 	jsr	Write16x16SpriteToOAM
 	jsr	WriteProjectileCoords
-	beq	locret_D4F6
+	beq	.return
 	lda	#0
 	sta	attackTimer
 
-loc_D4EF:
+.erase:
 	lda	#OBJ_NONE
 	sta	objType
 	jmp	EraseProjectileCoords
 ; ---------------------------------------------------------------------------
 
-locret_D4F6:
+.return:
 	rts
 ; End of function SwordObj
 
 ; ---------------------------------------------------------------------------
 swordXOffsets:
-	db	$FD,$10,$03,$F0
+	db	-3,16,3,-16
 swordYOffsets:
-	db	$F0,$06,$F0,$06
+	db	-16,6,-16,6
 swordAttrs:
 	db	$40,$40,$00,$00
 swordTiles:
@@ -70,7 +70,7 @@ swordTiles:
 MagicBombFireObj:
 	jsr	CalcObjXYPos
 
-loc_D50A:
+FlameObjCommon:
 	lda	frameCounter
 	asl	a
 	asl	a
@@ -84,13 +84,13 @@ loc_D50A:
 	lda	#$44
 	sta	spriteTileNum
 	jsr	DrawObjNoOffset
-	beq	loc_D528
+	beq	.erase
 	jsr	WriteProjectileCoords
-	bne	loc_D528
+	bne	.erase
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D528:
+.erase:
 	lda	#OBJ_NONE
 	sta	objType
 	jmp	EraseProjectileCoords
@@ -104,11 +104,11 @@ loc_D528:
 
 FlameSwordFireObj:
 	dec	objTimer
-	beq	loc_D536
-	jmp	loc_D50A
+	beq	.erase
+	jmp	FlameObjCommon
 ; ---------------------------------------------------------------------------
 
-loc_D536:
+.erase:
 	lda	#OBJ_NONE
 	sta	objType
 	jmp	EraseProjectileCoords
@@ -120,10 +120,10 @@ loc_D536:
 
 MagicBombObj:
 	lda	objTimer	; timer was initialized to 3
-	beq	loc_D543
+	beq	.doAnim
 	dec	objTimer
 
-loc_D543:
+.doAnim:
 	lda	#$62
 	sta	spriteTileNum
 	lda	frameCounter
@@ -131,25 +131,25 @@ loc_D543:
 	and	#3
 	sta	spriteAttrs	; palette shifting
 	jsr	UpdateObjXPos
-	bne	loc_D561
+	bne	.split  ; hit wall? split
 	jsr	DrawObj8x16NoOffset
-	beq	loc_D5A4
+	beq	.erase  ; offscreen? erase
 	jsr	WriteProjectileCoords
-	bne	loc_D561
+	bne	.split  ; collided with an object? split
 	bit	joy1
-	bvs	locret_D5AB	; don't split if player is still holding b
+	bvs	.return    ; don't split if player is still holding b
 
-loc_D561:
+.split:
 	lda	objTimer
-	bne	locret_D5AB
+	bne	.return
 	lda	#SFX_BOMB_SPLIT	; play "magic bomb split" sound
 	jsr	PlaySound
 	ldx	#$16
 	ldy	#6	; spawn 6 fireball objects
 
-loc_D56E:
+.loop:
 	lda	objectTable,x
-	bne	loc_D59C
+	bne	.nextObj
 	lda	objXPosLo
 	sta	objectTable+8,x	; x pos lo
 	lda	objXPosHi
@@ -167,39 +167,39 @@ loc_D56E:
 	lda	#0
 	sta	objectTable+4,x	; x speed
 
-loc_D59C:
+.nextObj:
 	txa
 	clc
 	adc	#$B
 	tax
 	dey
-	bpl	loc_D56E
+	bpl	.loop
 
-loc_D5A4:
+.erase:
 	jsr	EraseProjectileCoords
 	lda	#OBJ_NONE
 	sta	objType
 
-locret_D5AB:
+.return:
 	rts
 ; End of function MagicBombObj
 
 ; ---------------------------------------------------------------------------
 bombSpeedTbl:
-	db	$90
-	db	$B0
-	db	$D0
-	db	$F0
-	db	$10
-	db	$30
-	db	$50
+	db	-112
+	db	-80
+	db	-48
+	db	-16
+	db	16
+	db	48
+	db	80
 
 ; =============== S U B R O U T I N E =======================================
 
 
 BoundBallObj:
 	dec	objTimer
-	beq	loc_D5F5
+	beq	.erase
 	jsr	MakeObjBounce
 	jsr	UpdateRNG
 	and	#$1F
@@ -217,26 +217,26 @@ BoundBallObj:
 	sta	spriteAttrs
 	lda	weaponLevels+3
 	cmp	#3
-	bcs	loc_D5E6
+	bcs	.level3
 	lda	#$62
 	sta	spriteTileNum
 	jsr	DrawObj8x16
-	beq	loc_D5F5
-	bne	loc_D5EF
+	beq	.erase  ; offscreen? erase
+	bne	.writeCoords
 
-loc_D5E6:
+.level3:
 	lda	#$4E
 	sta	spriteTileNum
 	jsr	DrawObj
-	beq	loc_D5F5
+	beq	.erase ; offscreen? erase
 
-loc_D5EF:
+.writeCoords:
 	jsr	WriteProjectileCoords
-	bne	loc_D5F5
+	bne	.erase  ; hit an object? erase
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D5F5:
+.erase:
 	jsr	EraseProjectileCoords
 	lda	#OBJ_NONE
 	sta	objType
@@ -250,23 +250,23 @@ loc_D5F5:
 ShieldBallObj:
 	lda	frameCounter
 	and	#3
-	bne	loc_D607
+	bne	.dontDec
 	dec	objTimer
-	beq	loc_D637
+	beq	.erase
 
-loc_D607:
+.dontDec:
 	lda	currObjectIndex
 	asl	a
 	asl	a
 	clc
 	adc	frameCounter
 	pha
-	jsr	GetShieldBallX
+	jsr	ShieldBallCos
 	clc
 	adc	luciaDispX
 	sta	spriteX
 	pla
-	jsr	GetShieldBallY
+	jsr	ShieldBallSin
 	clc
 	adc	luciaDispY
 	sec
@@ -284,7 +284,7 @@ loc_D607:
 	jmp	WriteProjectileCoords
 ; ---------------------------------------------------------------------------
 
-loc_D637:
+.erase:
 	jsr	EraseProjectileCoords
 	lda	#OBJ_NONE
 	sta	objType
@@ -292,85 +292,40 @@ loc_D637:
 ; End of function ShieldBallObj
 
 ; ---------------------------------------------------------------------------
-shieldBallPosTbl:
-	db	$00
-	db	$08
-	db	$0F
-	db	$16
-	db	$1C
-	db	$21
-	db	$25
-	db	$27
-	db	$28
-	db	$27
-	db	$25
-	db	$21
-	db	$1C
-	db	$16
-	db	$0F
-	db	$08
-	db	$00
-	db	$06
-	db	$0C
-	db	$12
-	db	$17
-	db	$1B
-	db	$1E
-	db	$1F
-	db	$20
-	db	$1F
-	db	$1E
-	db	$1B
-	db	$17
-	db	$12
-	db	$0C
-	db	$06
-	db	$00
-	db	$05
-	db	$09
-	db	$0D
-	db	$11
-	db	$14
-	db	$16
-	db	$18
-	db	$18
-	db	$18
-	db	$16
-	db	$14
-	db	$11
-	db	$0D
-	db	$09
-	db	$05
+
+; contains half of 3 different sine curves (other half is mirrored in software)
+shieldBallSinTbl:
+	db	$00,$08,$0F,$16,$1C,$21,$25,$27,$28,$27,$25,$21,$1C,$16,$0F,$08
+	db	$00,$06,$0C,$12,$17,$1B,$1E,$1F,$20,$1F,$1E,$1B,$17,$12,$0C,$06
+	db	$00,$05,$09,$0D,$11,$14,$16,$18,$18,$18,$16,$14,$11,$0D,$09,$05
 
 ; =============== S U B R O U T I N E =======================================
 
 
-GetShieldBallX:
+ShieldBallCos:
 	clc
 	adc	#8
-; End of function GetShieldBallX
 
 
 ; =============== S U B R O U T I N E =======================================
 
 
-GetShieldBallY:
+ShieldBallSin:
 	and	#$1F
 	cmp	#$F
-	bcs	loc_D67F
+	bcs	.negate
 	jsr	GetShieldBallOffset
-	lda	shieldBallPosTbl,x
+	lda	shieldBallSinTbl,x
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D67F:
+.negate:
 	and	#$F
 	jsr	GetShieldBallOffset
 	lda	#0
 	sec
-	sbc	shieldBallPosTbl,x
+	sbc	shieldBallSinTbl,x
 	rts
-; End of function GetShieldBallY
 
 
 ; =============== S U B R O U T I N E =======================================
@@ -404,44 +359,44 @@ shieldBallOffsetTbl:
 SmasherObj:
 	lda	#SFX_ENEMY_HIT
 	jsr	PlaySound
-	bit	objHP	; this gets initialized to A by the weapon code
-	bpl	loc_D6B2
-	lda	#OBJ_SMASHER_DAMAGE	; once the "expand/contract" animation is done, have it home in on an enemy
+	bit	objHP	; this gets initialized to 10 by the weapon code
+	bpl	.active
+	lda	#OBJ_SMASHER_DAMAGE	; have the smasher damage the enemy it homed into after the animation
 	sta	objType
 	lda	#1
 	sta	objTimer
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D6B2:
+.active:
 	dec	objTimer
-	bne	loc_D6C4
+	bne	.timerRemaining
 	lda	weaponLevels+5	; higher smasher level = shorter delay
 	and	#3
 	tax
 	lda	smasherDelays,x
 	sta	objTimer
 	dec	objHP
-	bmi	locret_D6D3
+	bmi	.return
 
-loc_D6C4:
+.timerRemaining:
 	lda	objHP
 	cmp	#6
-	bcs	loc_D6D4
+	bcs	.centerLucia
 	jsr	CheckEnemies
-	bne	loc_D6D6
+	bne	.centerObj
 	lda	#OBJ_NONE	; delete smasher object before the "shrink" part of the animation if there's no enemies onscreen
 	sta	objType
 
-locret_D6D3:
+.return:
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D6D4:
+.centerLucia:
 	ldx	#0	; first part of animation: center around Lucia. Otherwise, X is
 ; initialized to the first enemy object in the objects list
 
-loc_D6D6:
+.centerObj:
 	lda	frameCounter
 	asl	a
 	asl	a
@@ -474,7 +429,7 @@ loc_D6D6:
 	sta	$3
 	lda	#8	; there are 8 smasher fireball objects
 
-loc_D717:
+.loop:
 	pha
 	jsr	UpdateRNG
 	and	$2	; get a random value within the limit mask
@@ -494,7 +449,7 @@ loc_D717:
 	pla
 	sec
 	sbc	#1
-	bne	loc_D717
+	bne	.loop
 	rts
 ; End of function SmasherObj
 
@@ -534,18 +489,18 @@ smasherDelays:
 CheckEnemies:
 	ldx	#$63
 
-loc_D756:
+.loop:
 	lda	objectTable,x
-	bne	locret_D766
+	bne	.return
 	txa
 	clc
 	adc	#$B
 	tax
 	cmp	#$FD
-	bcc	loc_D756
+	bcc	.loop
 	lda	#0
 
-locret_D766:
+.return:
 	rts
 ; End of function CheckEnemies
 
@@ -555,7 +510,7 @@ locret_D766:
 
 SmasherDamageObj:
 	lda	objTimer
-	beq	loc_D77B
+	beq	.erase
 	dec	objTimer
 	lda	#0
 	sta	dispOffsetX
@@ -565,7 +520,7 @@ SmasherDamageObj:
 	jmp	WriteProjectileCoords
 ; ---------------------------------------------------------------------------
 
-loc_D77B:
+.erase:
 	jsr	EraseProjectileCoords
 	lda	#OBJ_NONE
 	sta	objType
@@ -586,7 +541,7 @@ EraseProjectileCoords:
 
 
 WriteProjectileCoords:
-	lda	currObjectIndex
+	lda	currObjectIndex ; calculate projectile tbl offset
 	sec
 	sbc	#1
 	and	#7
@@ -594,21 +549,21 @@ WriteProjectileCoords:
 	tax
 	ldy	#0
 	lda	luciaProjectileCoords+1,x
-	cmp	#1
-	bne	loc_D799
+	cmp	#1  ; set when the projectile hit an enemy
+	bne	.noHit
 	dey
 
-loc_D799:
+.noHit:
 	lda	spriteX
 	sta	luciaProjectileCoords,x
 	lda	spriteY
 	clc
 	adc	#8	; sprites are 8x16 so this gets the center
 	cmp	#1
-	bne	loc_D7A8
+	bne	.not1
 	lda	#2
 
-loc_D7A8:
+.not1:
 	sta	luciaProjectileCoords+1,x
 	tya
 	rts
@@ -631,15 +586,15 @@ FlameSwordFlameObj:
 	jsr	DrawObjNoOffset
 	jsr	WriteProjectileCoords
 	dec	objTimer
-	beq	loc_D7F6
+	beq	.erase
 	lda	objTimer
 	and	#1
-	bne	locret_D7F5
+	bne	.return
 	lda	#$63
 	sta	$0
 	lda	#$21
 	jsr	GetNextObjSlot
-	bne	locret_D7F5
+	bne	.return
 	lda	objXPosLo
 	sta	objectTable+8,x
 	lda	objXPosHi
@@ -653,11 +608,11 @@ FlameSwordFlameObj:
 	lda	objTimer
 	sta	objectTable+2,x
 
-locret_D7F5:
+.return:
 	rts
 ; ---------------------------------------------------------------------------
 
-loc_D7F6:
+.erase:
 	lda	#OBJ_NONE
 	sta	objType
 	jmp	EraseProjectileCoords
