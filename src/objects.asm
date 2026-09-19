@@ -97,7 +97,7 @@ CheckForDrop:
         adc     #$11
         tax
         lda     collisionBuff,x
-        cmp     #$24                    ; '$'
+        cmp     #$24
         bcc     locret_D848
         jmp     NegateXSpeedAndDirection
 ; ---------------------------------------------------------------------------

@@ -581,7 +581,7 @@ FlameSwordFlameObj:
         asl     a
         and     #$80
         sta     spriteAttrs
-        lda     #$44                    ; 'D'
+        lda     #$44
         sta     spriteTileNum
         jsr     DrawObjNoOffset
         jsr     WriteProjectileCoords

@@ -215,7 +215,7 @@ InitPPU:
         sta     vramWriteCount
         lda     #$B0
         sta     ppuctrlCopy
-        lda     #$73                    ; 's'
+        lda     #$73
         jsr     WriteMapper
         jsr     ClearNametable
         jmp     ResetScrollPos

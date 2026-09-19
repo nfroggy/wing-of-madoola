@@ -5,11 +5,11 @@
 
 LimitLuciaHPMP:
         lda     maxMagicHi
-        cmp     #$50                    ; 'P'
+        cmp     #$50
         bcc     loc_BD76
         lda     #0
         sta     maxMagicLo
-        lda     #$50                    ; 'P'
+        lda     #$50
         sta     maxMagicHi
 
 loc_BD76:

@@ -94,7 +94,7 @@ SetUpScrollVars:
         lda     nametablePosX
         clc
         adc     scrollXTileOffsets,x
-        and     #$3F                    ; '?'
+        and     #$3F
         sta     nametableStartX
         lda     nametablePosY
         jsr     HandleNametableWrapping
@@ -380,7 +380,7 @@ rowTileChange:
 
 loc_BAB8:
         lda     nametableWriteX
-        and     #$3F                    ; '?'
+        and     #$3F
         sta     nametableWriteX
         jsr     VramSetWriteCount
         jmp     setUpRowWrite
@@ -595,7 +595,7 @@ loc_BBF2:
         bne     loc_BBE0
         jsr     VramSetWriteCount
         lda     nametableWriteX
-        and     #$3F                    ; '?'
+        and     #$3F
         sta     nametableWriteX
         jmp     loc_BBD2
 ; End of function WriteAttrTblRow
