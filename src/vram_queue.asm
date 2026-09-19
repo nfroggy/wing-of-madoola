@@ -5,11 +5,11 @@
 
 VramWriteByte:
 
-	ldx	vramWriteCount
-	sta	vramWriteBuff,x
-	inx
-	stx	vramWriteCount
-	rts
+        ldx     vramWriteCount
+        sta     vramWriteBuff,x
+        inx
+        stx     vramWriteCount
+        rts
 ; End of function VramWriteByte
 
 
@@ -20,8 +20,8 @@ VramWriteByte:
 ;     $3 - high byte of VRAM address
 
 VramWriteATCol:
-	lda	#$40
-	bne	loc_CAA3
+        lda     #$40
+        bne     loc_CAA3
 ; End of function VramWriteATCol
 
 
@@ -32,8 +32,8 @@ VramWriteATCol:
 ;     $3 - high byte of VRAM address
 
 VramWriteLinear:
-	lda	#0
-	beq	loc_CAA3
+        lda     #0
+        beq     loc_CAA3
 ; End of function VramWriteLinear
 
 
@@ -44,21 +44,21 @@ VramWriteLinear:
 ;     $3 - high byte of VRAM address
 
 VramWriteNTCol:
-	lda	#$80
+        lda     #$80
 
 loc_CAA3:
-	ldx	vramWriteCount
-	sta	vramWriteBuff+2,x
-	lda	$2
-	sta	vramWriteBuff,x
-	inx
-	lda	$3
-	sta	vramWriteBuff,x
-	inx
-	stx	vramBuffEnd
-	inx
-	stx	vramWriteCount
-	rts
+        ldx     vramWriteCount
+        sta     vramWriteBuff+2,x
+        lda     $2
+        sta     vramWriteBuff,x
+        inx
+        lda     $3
+        sta     vramWriteBuff,x
+        inx
+        stx     vramBuffEnd
+        inx
+        stx     vramWriteCount
+        rts
 ; End of function VramWriteNTCol
 
 
@@ -68,13 +68,13 @@ loc_CAA3:
 ; to the total number of bytes in the VRAM write buffer.
 
 VramSetWriteCount:
-	lda	vramWriteCount
-	clc
-	sbc	vramBuffEnd
-	ldx	vramBuffEnd
-	ora	vramWriteBuff,x
-	sta	vramWriteBuff,x
-	rts
+        lda     vramWriteCount
+        clc
+        sbc     vramBuffEnd
+        ldx     vramBuffEnd
+        ora     vramWriteBuff,x
+        sta     vramWriteBuff,x
+        rts
 ; End of function VramSetWriteCount
 
 
@@ -82,74 +82,74 @@ VramSetWriteCount:
 
 
 CopyToVRAM:
-	ldx	#0
+        ldx     #0
 
 checkTilemapCount:
-	cpx	vramWriteCount
-	bcc	loc_CAD3	; keep writing if x < tilemapWriteCount
-	lda	#0
-	sta	vramWriteCount
-	rts
+        cpx     vramWriteCount
+        bcc     loc_CAD3                ; keep writing if x < tilemapWriteCount
+        lda     #0
+        sta     vramWriteCount
+        rts
 ; ---------------------------------------------------------------------------
 
 loc_CAD3:
-	lda	$2002	; clear PPUADDR latch
-	lda	vramWriteBuff+1,x	; upper byte of write address
-	sta	$2006
-	sta	ppuAddrHi
-	lda	vramWriteBuff,x	; lower byte of write address
-	sta	$2006
-	sta	ppuAddrLo
-	inx	; skip past the address
-	inx
-	lda	vramWriteBuff,x
-	and	#$40
-	bne	incrementBy8	; if bit 6 is set, increment by 8
-	lda	vramWriteBuff,x
-	bmi	incrementBy32	; if bit 7 is set, increment by 32
-	lda	#0	; else, increment by 1 (write row)
-	jmp	loc_CAFB
+        lda     $2002                   ; clear PPUADDR latch
+        lda     vramWriteBuff+1,x       ; upper byte of write address
+        sta     $2006
+        sta     ppuAddrHi
+        lda     vramWriteBuff,x         ; lower byte of write address
+        sta     $2006
+        sta     ppuAddrLo
+        inx                             ; skip past the address
+        inx
+        lda     vramWriteBuff,x
+        and     #$40
+        bne     incrementBy8            ; if bit 6 is set, increment by 8
+        lda     vramWriteBuff,x
+        bmi     incrementBy32           ; if bit 7 is set, increment by 32
+        lda     #0                      ; else, increment by 1 (write row)
+        jmp     loc_CAFB
 ; ---------------------------------------------------------------------------
 
 incrementBy32:
-	lda	#4	; increment by 32 (write column)
+        lda     #4                      ; increment by 32 (write column)
 
 loc_CAFB:
-	sta	$2000
-	lda	vramWriteBuff,x
-	and	#$3F
-	tay	; number of bytes to write
-	inx
+        sta     $2000
+        lda     vramWriteBuff,x
+        and     #$3F
+        tay                             ; number of bytes to write
+        inx
 
 loc_CB05:
-	lda	vramWriteBuff,x
-	sta	$2007
-	inx
-	dey
-	bne	loc_CB05
-	jmp	checkTilemapCount
+        lda     vramWriteBuff,x
+        sta     $2007
+        inx
+        dey
+        bne     loc_CB05
+        jmp     checkTilemapCount
 ; ---------------------------------------------------------------------------
 
 incrementBy8:
-	lda	vramWriteBuff,x	; incrementing by 8 is used for updating columns in
+        lda     vramWriteBuff,x         ; incrementing by 8 is used for updating columns in
 ; the attribute table
-	and	#$3F
-	tay	; number of bytes to write
-	inx
+        and     #$3F
+        tay                             ; number of bytes to write
+        inx
 
 loc_CB19:
-	lda	$2002
-	lda	ppuAddrHi
-	sta	$2006
-	lda	ppuAddrLo
-	sta	$2006
-	clc
-	adc	#8
-	sta	ppuAddrLo
-	lda	vramWriteBuff,x
-	sta	$2007
-	inx
-	dey
-	bne	loc_CB19
-	jmp	checkTilemapCount
+        lda     $2002
+        lda     ppuAddrHi
+        sta     $2006
+        lda     ppuAddrLo
+        sta     $2006
+        clc
+        adc     #8
+        sta     ppuAddrLo
+        lda     vramWriteBuff,x
+        sta     $2007
+        inx
+        dey
+        bne     loc_CB19
+        jmp     checkTilemapCount
 ; End of function CopyToVRAM
